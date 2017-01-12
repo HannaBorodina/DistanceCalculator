@@ -4,14 +4,6 @@ import firebase from 'firebase';
 class Form extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      pickUpAddress: null,
-      dropOffAddress: null,
-      pickUpLatLng: null,
-      dropOffLatLng: null,
-    };
-  }
-  componentWillMount() {
     const config = {
       apiKey: "AIzaSyAdJ9fuClWYzoYXBICfMDX05dnzJpcg0R4",
       authDomain: 'addresses-ac5de.firebaseio.com',
@@ -29,7 +21,7 @@ class Form extends Component {
 
   btnOnclick(e) {
     e.preventDefault();
-    let distanceMetre = window.google.maps.geometry.spherical.computeDistanceBetween(this.state.pickUpLatLng, this.state.dropOffLatLng);
+    let distanceMetre = window.google.maps.geometry.spherical.computeDistanceBetween(this.props.pickUpLatLng, this.props.dropOffLatLng);
     let distanceMiles = distanceMetre * 0.000621;
     console.log(distanceMetre);
     console.log(distanceMiles);
@@ -37,8 +29,8 @@ class Form extends Component {
     if (distanceMiles < 20) {
       rootRef.ref('distances/' + this.uuid()).set({
         distance: distanceMiles,
-        dropOffAddress: this.state.dropOffAddress,
-        pickUpAddress: this.state.pickUpAddress
+        dropOffAddress: this.props.dropOffAddress,
+        pickUpAddress: this.props.pickUpAddress
       });
       document.getElementById('textPush').innerHTML = "Distance is less than 20 miles, data pushed to firebase";
     }
@@ -60,10 +52,7 @@ class Form extends Component {
       if (status === window.google.maps.GeocoderStatus.OK) {
         let _pickUpLatLng = results[0].geometry.location;
         let _pickUpAddress = results[0].formatted_address;
-        self.setState({
-          pickUpLatLng: _pickUpLatLng,
-          pickUpAddress: _pickUpAddress,
-        });
+        self.props.changeStatePickUp(_pickUpLatLng, _pickUpAddress);
       }
     });
     document.getElementById('textPush').innerHTML = "";
@@ -77,10 +66,7 @@ class Form extends Component {
       if (status === window.google.maps.GeocoderStatus.OK) {
         let _dropOffLatLng = results[0].geometry.location;
         let _dropOffAddress = results[0].formatted_address;
-        self.setState({
-          dropOffLatLng: _dropOffLatLng,
-          dropOffAddress: _dropOffAddress,
-        });
+        self.props.changeStateDropOff(_dropOffLatLng, _dropOffAddress);
       }
     });
     document.getElementById('textPush').innerHTML = "";
