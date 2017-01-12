@@ -42,6 +42,8 @@ class Form extends Component {
       });
       document.getElementById('textPush').innerHTML = "Distance is less than 20 miles, data pushed to firebase";
     }
+    document.getElementById('pickup').value = "";
+    document.getElementById('dropoff').value = "";
   }
 
   uuid() {
