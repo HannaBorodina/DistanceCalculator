@@ -27,10 +27,14 @@ class Form extends Component {
     console.log(distanceMiles);
     let rootRef = firebase.database();
     if (distanceMiles < 20) {
-      rootRef.ref('distances/' + this.uuid()).set({
+      rootRef.ref('addresses/' + this.uuid()).set({
         distance: distanceMiles,
         dropOffAddress: this.props.dropOffAddress,
-        pickUpAddress: this.props.pickUpAddress
+        pickUpAddress: this.props.pickUpAddress,
+        pickUpLat: this.props.pickUpLatLng.lat(),
+        pickUpLng: this.props.pickUpLatLng.lng(),
+        dropOffLat: this.props.dropOffLatLng.lat(),
+        dropOffLng: this.props.dropOffLatLng.lng()
       });
       document.getElementById('textPush').innerHTML = "Distance is less than 20 miles, data pushed to firebase";
     }
